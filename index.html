@@ -285,9 +285,22 @@ const FirebaseService = {
             }
             
             if (userData) {
-                if (userData.isBlocked) return { success: false, message: "Key blocked" };
-                return { success: true, user: { key: cleanInput, userId: pushKey, userType: 'Client' } };
+    if (userData.isBlocked)
+        return { success: false, message: "Key blocked" };
+
+    if (userData.userType === "Third Client")
+        return { success: false, message: "This key not for web admin" };
+
+    return {
+        success: true,
+        user: {
+            key: cleanInput,
+            userId: pushKey,
+            userType: userData.userType || 'Client'
+        }
+    };
             }
+            
             return { success: false, message: "Invalid key" };
         } catch (e) { return { success: false, message: e.message }; }
     },
